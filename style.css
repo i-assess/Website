@@ -1,0 +1,33 @@
+.machine__stage {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+#modelcanvas {
+  display: block;
+  width: 500px;
+  height: 500px;
+  touch-action: none;
+}
+
+#modelLoading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+#modelLoading.is-off {
+  opacity: 0;
+}
+
+.machine {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+}
