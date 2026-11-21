@@ -1,3 +1,7 @@
+body{
+  background: linear-gradient(135deg, #deefff 0%,#98bede 100%)
+}
+
 .machine__stage {
   position: relative;
   width: 1080px;
@@ -49,6 +53,7 @@
 }
 
 .navbar-label {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
     max-width: 0;
     margin-left: 0;
     overflow: hidden;
@@ -69,4 +74,89 @@
 nav a:hover .navbar-icon {
     transform: rotate(15deg);
     color: var(--theme-fg-emphasis, var(--navbar-brand-color));
+}
+
+.logo{
+  height: 75px;
+  width: auto;
+}
+header {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+nav,
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  max-width: none;
+  min-height: 64px;
+  margin: 0;
+  padding: 8px 24px;
+  box-sizing: border-box;
+  border-width: 0 0 2px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.22);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  overflow: hidden;
+}
+
+nav ul {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav ul li {
+  display: flex;
+}
+
+.navbar-link {
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.navbar-link:hover,
+.navbar-link:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.16);
+  outline: none;
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 0;
+  }
+
+  .navbar {
+    min-height: 56px;
+    padding: 6px 10px;
+  }
+
+  .logo {
+    height: 34px;
+  }
+
+  .navbar-link {
+    padding: 8px;
+  }
 }
