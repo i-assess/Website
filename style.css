@@ -37,12 +37,34 @@ body{
 }
 .navbar-icon
 {
+   filter: brightness(0) saturate(100%) invert(8%) sepia(19%) saturate(3373%) hue-rotate(211deg) brightness(91%) contrast(108%);
     width: 30px;
     height: 30px;
     color: var(--theme-fg-emphasis, var(--navbar-brand-color));
     display: block;
     transform-origin: center;
     transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.navbar-link.active,
+.navbar-link.active .navbar-label {
+    color: #8080e2;
+}
+
+.navbar-link.active {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.navbar-link.active .navbar-icon {
+    filter: brightness(0) saturate(100%) invert(67%) sepia(48%) saturate(4613%) hue-rotate(207deg) brightness(94%) contrast(88%);
+}
+
+.navbar-link.active .navbar-label {
+    max-width: 60px;
+    margin-left: 10px;
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .navbar-link {
@@ -53,7 +75,8 @@ body{
 }
 
 .navbar-label {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #0a0a2b;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     max-width: 0;
     margin-left: 0;
     overflow: hidden;
@@ -150,10 +173,6 @@ nav ul li {
   .navbar {
     min-height: 56px;
     padding: 6px 10px;
-  }
-
-  .logo {
-    height: 34px;
   }
 
   .navbar-link {
