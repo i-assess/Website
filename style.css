@@ -31,3 +31,42 @@
   place-items: center;
   min-height: 100vh;
 }
+.navbar-icon
+{
+    width: 30px;
+    height: 30px;
+    color: var(--theme-fg-emphasis, var(--navbar-brand-color));
+    display: block;
+    transform-origin: center;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.navbar-link {
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+}
+
+.navbar-label {
+    max-width: 0;
+    margin-left: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: max-width 0.3s ease, margin-left 0.3s ease, opacity 0.2s ease, transform 0.3s ease;
+}
+
+.navbar-link:hover .navbar-label,
+.navbar-link:focus-visible .navbar-label {
+    max-width: 60px;
+    margin-left: 10px;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+nav a:hover .navbar-icon {
+    transform: rotate(15deg);
+    color: var(--theme-fg-emphasis, var(--navbar-brand-color));
+}
