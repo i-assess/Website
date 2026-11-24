@@ -134,7 +134,7 @@ footer {
   border: 0;
   border-radius: 12px;
   background: transparent;
-  color: #29344a;
+  color: #0a0a2b;
   font: 400 1rem Verdana, Geneva, Tahoma, sans-serif;
   cursor: pointer;
   transition:
@@ -146,8 +146,13 @@ footer {
 .model-control-button:hover,
 .model-control-button:focus-visible {
   background: rgba(255, 255, 255, 0.14);
-  color: #8080e2;
   outline: none;
+}
+
+.model-control-button:hover .model-control-label img,
+.model-control-button:focus-visible .model-control-label img,
+.model-control-button.is-over-model .model-control-label img {
+  filter: brightness(0) saturate(100%) invert(67%) sepia(48%) saturate(4613%) hue-rotate(207deg) brightness(94%) contrast(88%);
 }
 
 .model-control-label {
@@ -165,10 +170,6 @@ footer {
   transition: filter 0.2s ease;
 }
 
-.model-control-button:hover .model-control-label img,
-.model-control-button:focus-visible .model-control-label img {
-  filter: brightness(0) saturate(100%) invert(67%) sepia(48%) saturate(4613%) hue-rotate(207deg) brightness(94%) contrast(88%);
-}
 
 .model-control-label img.is-spinning {
   animation: reset-spin-360 0.35s ease-in-out;

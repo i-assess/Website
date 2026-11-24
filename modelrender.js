@@ -21,11 +21,11 @@ if (canvas && stage) init();
 function init() {
   const renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: true,
+    antialias: window.devicePixelRatio < 2,
     alpha: true,
     powerPreference: 'high-performance'
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
@@ -87,8 +87,6 @@ function init() {
 
     target.traverse((object) => {
       if (!object.isMesh) return;
-      object.frustumCulled = false;
-
       if (object.material) {
         object.material = object.material.clone();
 
@@ -153,10 +151,19 @@ function init() {
     if (modelReady) fitCamera();
   }
 
-  window.addEventListener('resize', resize, { passive: true });
+  let resizeFrame = 0;
+  const scheduleResize = () => {
+    if (resizeFrame) return;
+    resizeFrame = requestAnimationFrame(() => {
+      resizeFrame = 0;
+      resize();
+    });
+  };
+
+  window.addEventListener('resize', scheduleResize, { passive: true });
 
   if ('ResizeObserver' in window) {
-    const stageObserver = new ResizeObserver(resize);
+    const stageObserver = new ResizeObserver(scheduleResize);
     stageObserver.observe(canvas);
   }
 
@@ -243,9 +250,50 @@ function init() {
   }
 
   const clock = new THREE.Clock();
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let animationFrame = 0;
+  let stageVisible = true;
+  let lastContrastCheck = 0;
+
+  function updateResetColour(now) {
+    if (!resetButton || now - lastContrastCheck < 100) return;
+    lastContrastCheck = now;
+
+    const canvasRect = canvas.getBoundingClientRect();
+    const buttonRect = resetButton.getBoundingClientRect();
+    const gl = renderer.getContext();
+    const pixel = new Uint8Array(4);
+    let overModel = false;
+
+    for (let sampleY = 0.25; sampleY <= 0.75 && !overModel; sampleY += 0.25) {
+      for (let sampleX = 0.25; sampleX <= 0.75 && !overModel; sampleX += 0.25) {
+        const cssX = buttonRect.left + buttonRect.width * sampleX;
+        const cssY = buttonRect.top + buttonRect.height * sampleY;
+
+        if (
+          cssX < canvasRect.left ||
+          cssX >= canvasRect.right ||
+          cssY < canvasRect.top ||
+          cssY >= canvasRect.bottom
+        ) continue;
+
+        const glX = Math.floor(
+          (cssX - canvasRect.left) * gl.drawingBufferWidth / canvasRect.width
+        );
+        const glY = Math.floor(
+          (canvasRect.bottom - cssY) * gl.drawingBufferHeight / canvasRect.height
+        );
+
+        gl.readPixels(glX, glY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+        overModel = pixel[3] > 16;
+      }
+    }
+
+    resetButton.classList.toggle('is-over-model', overModel);
+  }
 
   function animate() {
-    requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(animate);
 
     const delta = Math.min(clock.getDelta(), 0.05);
 
@@ -261,13 +309,41 @@ function init() {
       0.16
     );
 
-    if (!dragging) {
+    if (!dragging && !prefersReducedMotion.matches) {
       yaw += SETTINGS.AUTO_ROTATE_SPEED * delta;
     }
     root.rotation.z = 0;
 
     renderer.render(scene, camera);
+    updateResetColour(performance.now());
+    updateResetContrast(performance.now());
   }
 
-  animate();
+  function startAnimation() {
+    if (animationFrame || document.hidden || !stageVisible) return;
+    clock.getDelta();
+    animate();
+  }
+
+  function stopAnimation() {
+    if (!animationFrame) return;
+    cancelAnimationFrame(animationFrame);
+    animationFrame = 0;
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopAnimation();
+    else startAnimation();
+  });
+
+  if ('IntersectionObserver' in window) {
+    const stageObserver = new IntersectionObserver(([entry]) => {
+      stageVisible = entry.isIntersecting;
+      if (stageVisible) startAnimation();
+      else stopAnimation();
+    });
+    stageObserver.observe(stage);
+  }
+
+  startAnimation();
 }
