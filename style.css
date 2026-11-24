@@ -14,6 +14,67 @@ body {
   margin: 0px;
 }
 
+.image-carousel {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 48vh;
+  margin: 0;
+  padding: 24px 4vw;
+  box-sizing: border-box;
+  overflow: hidden;
+  perspective: 1100px;
+  cursor: grab;
+  user-select: none;
+}
+
+.image-carousel.is-dragging {
+  cursor: grabbing;
+}
+
+.image-carousel-track {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  height: 100%;
+  min-height: 360px;
+  transform-style: preserve-3d;
+}
+
+.image-carousel-track img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(18vw, 220px);
+  height: min(35vh, 360px);
+  object-fit: cover;
+  border: 1px solid rgba(10, 10, 43, 0.25);
+  border-radius: 4px;
+  box-shadow: 0 8px 18px rgba(10, 10, 43, 0.16);
+  backface-visibility: hidden;
+  opacity: 0;
+  transition:
+    transform 0.12s linear,
+    filter 0.25s ease,
+    opacity 0.35s ease;
+}
+
+@media (max-width: 700px) {
+  .image-carousel {
+    min-height: 42vh;
+    padding: 20px 2vw;
+  }
+
+  .image-carousel-track {
+    min-height: 280px;
+  }
+
+  .image-carousel-track img {
+    width: 22vw;
+    height: min(30vh, 260px);
+  }
+}
+
 footer {
   display: flex;
   align-items: center;
@@ -36,7 +97,7 @@ footer {
   flex-direction: column;
   gap: 8px;
   margin-top: auto;
-  background: rgba(90, 105, 125, 0.18);
+  background: rgba(0, 0, 0, 0.164);
   color: rgba(71, 71, 77, 0.72);
   border-color: rgba(255, 255, 255, 0.32);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -44,7 +105,8 @@ footer {
   font-family:serif;
 }
 .footer-credit-links{
-  color: rgba(134, 134, 161);
+  color: rgb(104, 104, 133);
+  font-weight: 800;
   text-decoration: none;
   display: inline-block;
   transform-origin: center bottom;
@@ -53,7 +115,7 @@ footer {
 
 .footer-credit-links:hover,
 .footer-credit-links:focus-visible{
-  color: rgb(161, 161, 228);
+  color: rgb(124, 124, 168);
   cursor: pointer;
   outline: none;
   animation: footer-credit-bounce 0.55s ease-out;
@@ -83,13 +145,17 @@ footer {
   .footer-credit-links:focus-visible {
     animation: none;
   }
+
+  .navbar {
+    animation: none;
+  }
 }
 
 .footer-disclaimer {
   min-height: 48px;
   margin-top: 0;
   border-top: 2px dotted rgba(255, 255, 255, 0.38);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.226);
   color: rgba(10, 10, 43, 0.68);
   font-size: 0.875rem;
   font-family: 'Times New Roman', Times, serif;
@@ -270,6 +336,26 @@ nav a:hover .navbar-icon {
   height: 75px;
   width: auto;
 }
+
+.navbanner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  max-width: 750px;
+  height: 100%;
+  object-fit: fill;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.navbar > .logo,
+.navbar > ul {
+  position: relative;
+  z-index: 1;
+}
+
 header {
   width: 100%;
   position: sticky;
@@ -281,6 +367,7 @@ header {
 
 nav,
 .navbar {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -295,11 +382,28 @@ nav,
   border-style: solid;
   border-color: rgba(255, 255, 255, 0.22);
   border-radius: 0;
-  background: rgba(255, 255, 255, 0.12);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(152, 190, 222, 0.28),
+    rgba(255, 255, 255, 0.16)
+  );
+  background-size: 200% 200%;
+  animation: navbar-gradient-diagonal 10s ease-in-out infinite alternate;
   box-shadow: none;
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   overflow: hidden;
+}
+
+@keyframes navbar-gradient-diagonal {
+  0% {
+    background-position: 0% 100%;
+  }
+
+  100% {
+    background-position: 100% 0%;
+  }
 }
 
 nav ul {
