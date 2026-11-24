@@ -1,5 +1,8 @@
 body{
   background: linear-gradient(135deg, #deefff 0%,#98bede 100%)
+  body{
+  margin: 0px;
+}
 }
 
 .machine__stage {
