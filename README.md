@@ -1,5 +1,5 @@
 # Official Website For I-Assess
-This site is in no way affiliated with Software Shown on the website. <br>
+This site is in no way affiliated with Software Shown or mentioned on the website. <br>
 
 <a href="https://sketchfab.com/3d-models/porsche-cayenne-d1fd357faf314607afc39a67d5b4f4f1">
   Porsche Cayenne
