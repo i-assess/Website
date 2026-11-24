@@ -34,6 +34,9 @@ function init() {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 500);
   camera.position.set(0, 0, 30);
+  const MIN_ZOOM = 0.65;
+  const MAX_ZOOM = 2.2;
+  const ZOOM_STEP = 0.12;
 
   const root = new THREE.Group();
   const model = new THREE.Group();
@@ -60,6 +63,8 @@ function init() {
   let lastY = 0;
   let yaw = SETTINGS.DEFAULT_YAW;
   let pitch = SETTINGS.DEFAULT_PITCH;
+  root.rotation.y = yaw;
+  root.rotation.x = pitch;
 
   new GLTFLoader().load(
     SETTINGS.MODEL_URL,
@@ -67,6 +72,7 @@ function init() {
       model.add(gltf.scene);
       normalizeModel(model);
       modelReady = true;
+      fitCamera();
       if (loadingEl) loadingEl.classList.add('is-off');
     },
     undefined,
@@ -106,7 +112,6 @@ function init() {
     );
 
     target.updateWorldMatrix(true, true);
-    fitCamera();
   }
 
   function fitCamera() {
@@ -135,8 +140,8 @@ function init() {
   }
 
   function resize() {
-    const width = stage.clientWidth;
-    const height = stage.clientHeight;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
 
     if (!width || !height) return;
 
@@ -149,7 +154,45 @@ function init() {
   }
 
   window.addEventListener('resize', resize, { passive: true });
+
+  if ('ResizeObserver' in window) {
+    const stageObserver = new ResizeObserver(resize);
+    stageObserver.observe(canvas);
+  }
+
   resize();
+
+  canvas.addEventListener('wheel', (event) => {
+    event.preventDefault();
+
+    const direction = event.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP;
+    const nextZoom = THREE.MathUtils.clamp(
+      camera.zoom + direction,
+      MIN_ZOOM,
+      MAX_ZOOM
+    );
+
+    camera.zoom = nextZoom;
+    camera.updateProjectionMatrix();
+  }, { passive: false });
+
+  const resetButton = document.getElementById('modelReset');
+  if (resetButton) {
+    resetButton.addEventListener('click', () => {
+      const icon = resetButton.querySelector('img');
+      if (icon) {
+        icon.classList.remove('is-spinning');
+        void icon.offsetWidth;
+        icon.classList.add('is-spinning');
+      }
+
+      yaw = SETTINGS.DEFAULT_YAW;
+      pitch = SETTINGS.DEFAULT_PITCH;
+      camera.zoom = 1;
+      camera.updateProjectionMatrix();
+      fitCamera();
+    });
+  }
 
   if (SETTINGS.ENABLE_DRAG) {
     canvas.addEventListener('pointerdown', (event) => {

@@ -114,6 +114,75 @@ footer {
   touch-action: none;
 }
 
+.model-controls {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+
+.model-control-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #29344a;
+  font: 400 1rem Verdana, Geneva, Tahoma, sans-serif;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.model-control-button:hover,
+.model-control-button:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  color: #8080e2;
+  outline: none;
+}
+
+.model-control-label {
+  display: inline-flex;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.model-control-label img {
+  width: 30px;
+  height: 30px;
+  filter: brightness(0) saturate(100%) invert(8%) sepia(19%) saturate(3373%) hue-rotate(211deg) brightness(91%) contrast(108%);
+  transform-origin: center;
+  transition: filter 0.2s ease;
+}
+
+.model-control-button:hover .model-control-label img,
+.model-control-button:focus-visible .model-control-label img {
+  filter: brightness(0) saturate(100%) invert(67%) sepia(48%) saturate(4613%) hue-rotate(207deg) brightness(94%) contrast(88%);
+}
+
+.model-control-label img.is-spinning {
+  animation: reset-spin-360 0.35s ease-in-out;
+}
+
+@keyframes reset-spin-360 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 #modelLoading {
   position: absolute;
   inset: 0;
